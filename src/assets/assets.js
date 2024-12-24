@@ -13,6 +13,7 @@ import add_icon from './add_icon.png'
 import arrow_icon from './arrow_icon.png'
 import Scofex_logo from './Scofex_logo.png'
 import mack_image from './mack_image.png'
+import image_fond from './image_fond.webp'
 
 const assets = {
     avatar_icon,
@@ -29,7 +30,8 @@ const assets = {
     add_icon,
     arrow_icon,
     Scofex_logo,
-    mack_image
+    mack_image,
+    image_fond
 }
 
 export default assets;

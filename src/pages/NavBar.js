@@ -47,21 +47,21 @@ const Navbar = () => {
               )}
               <li className=" flex text-2xl items-center hover:text-pink-700 hover:underline text-gray-700 bold bg-color-primary mb-3">
                 <Link to="/register">
-                  <FaUserPlus className="mr-2" />
+                  <FaUserPlus className="ml-4" />
                   Register
                 </Link>
               </li>
               <li className="flex text-2xl items-center hover:text-pink-700 hover:underline text-gray-700 bold bg-color-primary mb-3">
                 <Link to="/login">
-                  <FaUser className="mr-2" />
-                  Login
+                  <FaUser className="ml-4" />
                   {user ? (
                 <div className="text-lg text-gray-700">
-                  {user.displayName || user.email} - Connected
+                  {user.displayName || user.email} <span className="font-sm flex font-light ">Connecté</span>
                 </div>
               ) : (
-                <div className="text-2xl text-gray-700">
-                  Not Connected
+                <div className="text-2xl text-gray-700"> 
+                <span className="text-sm font-light flex
+               items-center justify-center">Non Connecté</span>
                 </div>
               )}
                 </Link>

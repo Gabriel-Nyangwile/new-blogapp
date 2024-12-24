@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom"; // Pour gérer les liens dynamiques avec React Router
-
+import image_fond from "../assets/image_fond.webp";
 const Dashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -10,10 +10,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="relative flex h-screen">
+      {/* image de fonds */}
+      <div className="absolute inset-0 w-full h-full">
+        <img src={image_fond} alt="Background" className="w-full h-full object-cover" />
+      </div>
       {/* Volet gauche (sidebar) */}
       <div
-        className={`${
+        className={`relative z-10 ${
           isSidebarOpen ? "w-auto" : "w-0"
         } bg-gray-400 text-white transition-all duration-300 overflow-hidden`}
       >
@@ -70,8 +74,8 @@ const Dashboard = () => {
       </div>
 
       {/* Volet central (contenu principal) */}
-      <div className="flex-1 bg-gray-100 p-4">
-        <div className="fixed top-4 left-4">
+      <div className="flex-1 p-4 flex flex-col items-center bg-gray-100">
+        <div className="fixed top-4 left-4 z-20">
           {/* Bouton pour afficher/cacher la sidebar si fermée */}
           {!isSidebarOpen && (
             <button
@@ -82,6 +86,12 @@ const Dashboard = () => {
             </button>
           )}
         </div>
+        <div className="flex justify-center absolute top-1/4 transform -translate-y-1/2 w-full z-20">
+          <div className="bg-black bg-opacity-50 p-6 rounded-lg">
+          <h1 className="text-4xl font-bold text-white mb-4">Bienvenue sur l'application BlogApp!</h1>
+        </div>
+        </div>
+        
         <Outlet /> {/* Affiche le composant enfant en fonction du lien */}
       </div>
     </div>
