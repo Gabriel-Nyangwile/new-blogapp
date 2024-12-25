@@ -41,7 +41,19 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Vue d'ensemble
+                  Vue des tous les blogs publiés
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/create"
+                  className={({ isActive }) =>
+                    `block p-2 rounded ${
+                      isActive ? "bg-blue-500" : "hover:bg-gray-600"
+                    }`
+                  }
+                >
+                  Créer son propre blog
                 </NavLink>
               </li>
               <li>
@@ -53,7 +65,7 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Profil
+                  Voir son profil
                 </NavLink>
               </li>
               <li>

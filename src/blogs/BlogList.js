@@ -55,10 +55,12 @@ const BlogList = () => {
   };
 
   return (
-    <div className="w-auto relative overflow-hidden  bg-gray-100 border-none py-10">
-      <h1 className="text-center items-center text-4xl mb-10">
-        Liste des blogs
+    <div className="w-auto relative overflow-hidden  bg-gray-100 border-none p-10">
+      <div className="bg-gray-700 bg-opacity-50 p-6 rounded-lg">
+        <h1 className="text-4xl font-semibold text-white text-center items-center mb-10">
+        Blogs publiés
       </h1>
+      </div>
       <ul>
         {blogs.map((blog) => (
           <li key={blog.id} className="mb-4">
