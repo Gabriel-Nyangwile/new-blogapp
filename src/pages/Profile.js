@@ -19,8 +19,7 @@ const ProfileUpdate = () => {
   const [uid, setUid] = useState("");
   const [prevImage, setPrevImage] = useState("");
   const { handleSubmit } = useForm();
-  const { setUserData} = useAuth();
-
+  const { setUserData, user } = useAuth();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -80,13 +79,12 @@ const ProfileUpdate = () => {
       await updateDoc(docRef, updateData);
       const snap = await getDoc(docRef);
       setUserData(snap.data());
-      navigate("/blogs"); 
+      navigate("/blogs");
     } catch (error) {
       console.error("Erreur à la saisie du profil : ", error);
     }
   };
 
-  
   return (
     <div className="w-auto relative overflow-hidden  bg-gray-400 border-none py-10">
       <form
@@ -94,22 +92,37 @@ const ProfileUpdate = () => {
         onSubmit={handleSubmit(profileUpdate)}
       >
         <h3 className="font-medium">Profile Details</h3>
-        <label className="flex items-center gap-[10px] text-gray-500 cursor-pointer">
-          <input
-            label="avatar"
-            className="mb-4"
-            onChange={handleImageChange}
-            type="file"
-            accept=".png, .jpg, .jpeg"
-            hidden
-          />
+        {!user ? (
+          <label className="flex items-center gap-[10px] text-gray-500 cursor-pointer">
+            <input
+              label="avatar"
+              className="mb-4"
+              onChange={handleImageChange}
+              type="file"
+              accept=".png, .jpg, .jpeg"
+              hidden
+            />
+            <img
+              src={image ? URL.createObjectURL(image) : assets.avatar_icon}
+              className="w-[50px] aspect-square rounded-full"
+              alt=""
+            />
+            <p>upload profile image</p>
+          </label>
+        ) : (
           <img
-            src={image ? URL.createObjectURL(image) : assets.avatar_icon}
-            className="w-[50px] aspect-square rounded-full"
+            className="max-w-[160px] aspect-square m-[20px_auto] rounded-full"
+            src={
+              image
+                ? URL.createObjectURL(image)
+                : prevImage
+                ? prevImage
+                : assets.logo_icon
+            }
             alt=""
           />
-          <p>upload profile image</p>
-        </label>
+        )}
+
         <Input
           label="Firstname"
           type="text"
@@ -142,20 +155,8 @@ const ProfileUpdate = () => {
           Save
         </Button>
       </form>
-      <img
-        className="max-w-[160px] aspect-square m-[20px_auto] rounded-full"
-        src={
-          image
-            ? URL.createObjectURL(image)
-            : prevImage
-            ? prevImage
-            : assets.logo_icon
-        }
-        alt=""
-      />
     </div>
   );
 };
 
 export default ProfileUpdate;
-
