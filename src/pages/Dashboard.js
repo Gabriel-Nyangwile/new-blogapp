@@ -70,14 +70,14 @@ const Dashboard = () => {
               </li>
               <li>
                 <NavLink
-                  to="/settings"
+                  to="/details"
                   className={({ isActive }) =>
                     `block p-2 rounded ${
                       isActive ? "bg-blue-500" : "hover:bg-gray-600"
                     }`
                   }
                 >
-                  Paramètres
+                  Montrez les détails du blog
                 </NavLink>
               </li>
             </ul>
