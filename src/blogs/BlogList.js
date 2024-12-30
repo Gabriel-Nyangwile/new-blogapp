@@ -12,7 +12,7 @@ const BlogList = () => {
   const navigate = useNavigate();
   const [commentText, setCommentText] = useState("");
   const [showCommentInput, setShowCommentInput] = useState(null);
-  const [updatedBlogs, setUpdatedBlogs] = useState(blogs); 
+  const [updatedBlogs, setUpdatedBlogs] = useState(blogs);
 
   useEffect(() => {
     setUpdatedBlogs(blogs);
@@ -33,15 +33,15 @@ const BlogList = () => {
       await addComment(blogId, comment);
       setCommentText("");
       //Mettez à jour les commentaires du blog spécifié
-      const updatedBlogsList = updatedBlogs.map((blogs) => {
-        if (blogs.id === blogId) {
-          const updatedComments = [...(blogs.comments || []), comment].sort((a, b) => b.createdAt - a.createdAt);
+      const updatedBlogsList = updatedBlogs.map((blog) => {
+        if (blog.id === blogId) {
+          const updatedComments = [...(blog.comments || []), comment];
           return {
-            ...blogs,
+            ...blog,
             comments: updatedComments,
           };
         }
-        return blogs;
+        return blog;
       });
       setUpdatedBlogs(updatedBlogsList);
     } catch (error) {
@@ -57,14 +57,29 @@ const BlogList = () => {
       navigate("/blogs");
       return;
     }
-    const userId = user.uid;
-
     try {
-      await addLike(blogId, userId);
+      const blog = updatedBlogs.find((blog) => blog.id === blogId);
+      const userLiked = blog.likes ? blog.likes.includes(user.uid) : false;
+
+      // Mettre à jour l'état du blog pour refléter les changements de likes
+      const updatedBlogsList = updatedBlogs.map((blog) => {
+        if (blog.id === blogId) {
+          return {
+            ...blog,
+            likes: userLiked
+              ? blog.likes.filter((uid) => uid !== user.uid)
+              : [...(blog.likes || []), user.uid],
+          };
+        }
+        return blog;
+      });
+      setUpdatedBlogs(updatedBlogsList);
+      await addLike(blogId, user.uid);
     } catch (error) {
-      console.error("Erreur d'ajoût de like:", error);
+      console.error("Erreur d'ajout de like :", error);
     }
   };
+
 
   const handleEdit = async (e, blogId) => {
     e.preventDefault();
@@ -81,17 +96,17 @@ const BlogList = () => {
   };
 
   return (
-    <div className="w-auto relative overflow-hidden  bg-gray-100 border-none p-10">
+    <div className="w-full relative flex flex-col items-stretch justify-start overflow-hidden  bg-gray-200 border-none p-10">
       <div className="bg-gray-700 bg-opacity-50 p-6 rounded-lg">
         <h1 className="text-4xl font-semibold text-white text-center items-center mb-10">
           Blogs publiés
         </h1>
       </div>
       <ul>
-        {blogs.map((blog) => (
+        {updatedBlogs.map((blog) => (
           <li
             key={blog.id}
-            className="mb-4 border-solid border-2 border-gray-300 p-4"
+            className="mb-4 border-solid border-2 justify-stretch border-gray-300 p-4"
           >
             <h2 className="text-3xl bold mb-4">Titre : {blog.title}</h2>
             <div>
@@ -114,7 +129,7 @@ const BlogList = () => {
                 )}
               </div>
             </div>
-            <div>
+            <div className="flex flex-col items-start justify-start mt-10 mb-10 px-6">
               <div className="w-full max-w-3xl mx-auto">
                 <span className="text-2xl underline mb-4">Contenu :</span>{" "}
                 {typeof blog.content === "string"
@@ -128,7 +143,7 @@ const BlogList = () => {
                 className="bg-gray-100 hover:bg-gray-300 text-gray-500 text-lg bg-primary m-3 gap-5"
                 onClick={(e) => handleLikes(e, blog.id)}
               >
-                ❤️ ({blog.likes ? blog.likes : 0})
+                ❤️ ({blog.likes ? blog.likes.length : 0})
               </Button>
               <Button
                 type="submit"
@@ -164,10 +179,18 @@ const BlogList = () => {
             </div>
             <div className="flex flex-col items-left justify-left mt-10 mb-10 px-6">
               {Array.isArray(blog.comments) ? (
-                blog.comments.map((comment, index) => (
-                  <div key={index}>
+                blog.comments
+                .sort((a,b) => b.createdAt - a.createdAt)
+                .map((comment, index) => (
+                  <div
+                    key={index}
+                    className="border-solid border-2 border-gray-300 p-2 mb-4"
+                  >
                     <br />
-                    {comment.text}
+                    {comment.text} - Par {comment.author} - le{" "}
+                    {comment.createdAt instanceof Timestamp
+                      ? comment.createdAt.toDate().toLocaleDateString()
+                      : "Invalid date"}
                   </div>
                 ))
               ) : (
@@ -178,14 +201,14 @@ const BlogList = () => {
               <Button
                 type="button"
                 className="hover:bg-blue-300 text-white bg-primary m-3 gap-5"
-                onClick={(e) => handleEdit(e, blogs.id)}
+                onClick={(e) => handleEdit(e, blog.id)}
               >
                 Edit
               </Button>
               <Button
                 type="button"
                 className="bg-blue-500 hover:bg-blue-300 text-white bg-primary m-3 gap-5"
-                onClick={(e) => showDetails(e, blogs.id)}
+                onClick={(e) => showDetails(e, blog.id)}
               >
                 Voir le blog
               </Button>
@@ -193,6 +216,11 @@ const BlogList = () => {
           </li>
         ))}
       </ul>
+      {user && (
+        <div className="flex justify-end w-full max-w-3xl mx-auto mt-5">
+          <Button onClick={() => navigate(`/`)}>Retour à l'accueil</Button>
+        </div>
+      )}
     </div>
   );
 };

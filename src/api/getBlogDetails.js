@@ -1,24 +1,35 @@
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../config/firebase'; // Assurez-vous que vous avez configuré Firebase
+import { useBlog } from '../contexte/BlogContext';
+
 // Obtenir les détails d'un blog
-export const getBlogDetails = async (id) => {
+export const GetBlogDetails = async (id) => {
+    
+    const {blogs} = useBlog();
+    blogs.find(blog => blog.id === id);
+    
+
     try {
-        //Remplacez l'URL par l'endpoint de l'API
-        const response = await fetch(`/api/blogs/${id}`);
-        /* const response = await fetch(`https://premier-app-485e4.firebaseio.com/blogs/${id}.json`); */
-
-
-        //Vérifier si la réponse est correcte
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
+        if(!db) {
+            throw new Error('Firebase non initialisé');
         }
-        //Convertir la réponse en JSON
-        const data = await response.json();
+        if(!id) {
+            throw new Error('ID du blog manquant');
+        }
+        const blogRef = doc(db, 'blogs', id);
+        const blogDoc = await getDoc(blogRef);
+
+        if (!blogDoc.exists()) {
+            throw new Error('Blog non trouvé');
+        }
+
+        const data = blogDoc.data();
         console.log('Détails du blog :', data);
 
-        //Retourner les données du blog
         return data;
 
     } catch (error) {
         console.error('Erreur :', error);
-        throw error
+        throw error;
     }
 };

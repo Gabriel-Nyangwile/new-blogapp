@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom"; // Pour gérer les liens dynamiques avec React Router
 import image_fond from "../assets/image_fond.webp";
+import LogoutBtn from '../components/LogoutBtn';
 const Dashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -81,6 +82,7 @@ const Dashboard = () => {
                 </NavLink>
               </li>
             </ul>
+            <LogoutBtn  />
           </nav>
         )}
       </div>

@@ -5,7 +5,7 @@ import { useBlog } from "../contexte/BlogContext";
 import Button from "../components/Button";
 import { Timestamp } from "firebase/firestore";
 import parse from "html-react-parser";
-import { getBlogDetails } from "../api/getBlogDetails";
+import { GetBlogDetails } from "../api/GetBlogDetails";
 
 
 function BlogDetails() {
@@ -20,31 +20,55 @@ function BlogDetails() {
   const [likes, setLikes] = useState(0);
   const [error, setError] = useState(null);
 
+ // const blog = blogs.find(blog => blog.id === id);
+
   useEffect(() => {
-    const fetchBlogDetails = async () => {
+    const fetchBlogDetails = async (id) => {
       try {
-        const response = await getBlogDetails(id);
-        console.log('Réponse de l\'API:', response);
-        const data = await response.json();
+        if(!id) {
+          throw new Error('ID du blog manquant');
+        }
+        const data = await GetBlogDetails(id);
+        if (!data) {
+          throw new Error('Données du blog non trouvées');
+        }
+        console.log('Détails du blog :', data);
+        setBlogs(data);
+        setLikes(data.likes ? data.likes.length : 0); // Initialisez les likes à 0 à partir des données du blog
+        setComments(data.comments || []);
+        console.log('Paramètres ID:', id);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des détails du blog :",
+          error
+        );
+        setError('Impossible de récupérer les détails du blog');
+      }
+    };
+    fetchBlogDetails(id);
+  }, [id, setBlogs]);
+
+  /* useEffect(() => {
+    const fetchBlogDetails = async (id) => {
+      try {
+        const data = await getBlogDetails(id);
+        console.log('Details du blog :', data)
         setBlogs(data);
         setLikes(data.likes ? data.likes.length : 0); //Initialisez les likes à 0 à partir des données du blog
         setComments(data.comments || []);
         console.log('Paramètres ID:', id);
       } catch (error) {
-        setError('Impossible de récupérer les détails du blog');
+        
         console.error(
           "Erreur lors de la récupération des détails du blog :",
           error
         );
+        setError('Impossible de récupérer les détails du blog');
       }
     };
     fetchBlogDetails();
   }, [id, setBlogs]);
-
-  if(error) {
-    return <p>{error}</p>;
-  }
-
+ */
 
   const handleLikes = async (e, blogId) => {
     e.preventDefault();
@@ -104,9 +128,9 @@ function BlogDetails() {
         </h1>
       </div>
       <ul className="w-full max-w-3xl mx-auto justify-start ">
-        {blogs.map((item) => (
+        {Array.isArray(blogs) && blogs.map((item) => (
           <li key={item.id} className="mb-4 border-b border-gray-300 pb-4">
-            <h2 className="text-3xl bold mb-4">Titre : {item.title}</h2>
+            <h2 className="items-start text-3xl bold mb-4">Titre : {item.title}</h2>
             <div>
               <p>
                 Auteur :{item.authorName || item.authorEmail} Créé le:{" "}
