@@ -112,7 +112,7 @@ const BlogList = () => {
             <div>
               {/* Pour vérifier que le contenu est une chaîne */}
               <p className="text-2xl bold mb-5">
-                Auteur : {blog.authorName || blog.authorEmail} Créé le:
+                Auteur : {blog.authorName || blog.authorEmail} -  Créé le:{" "}
                 {blog.createdAt instanceof Timestamp
                   ? blog.createdAt.toDate().toLocaleDateString()
                   : "Invalid date"}
@@ -131,7 +131,7 @@ const BlogList = () => {
             </div>
             <div className="flex flex-col items-start justify-start mt-10 mb-10 px-6">
               <div className="w-full max-w-3xl mx-auto">
-                <span className="text-2xl underline mb-4">Contenu :</span>{" "}
+                <span className="text-2xl underline my-6">Contenu :</span>{" "}
                 {typeof blog.content === "string"
                   ? parse(blog.content)
                   : "Invalid content"}
@@ -198,13 +198,15 @@ const BlogList = () => {
               )}
             </div>
             <div>
-              <Button
+              {user && user.uid === blog.authorId && (
+               <Button
                 type="button"
                 className="hover:bg-blue-300 text-white bg-primary m-3 gap-5"
                 onClick={(e) => handleEdit(e, blog.id)}
               >
-                Edit
-              </Button>
+                Modifier
+              </Button> 
+              )}
               <Button
                 type="button"
                 className="bg-blue-500 hover:bg-blue-300 text-white bg-primary m-3 gap-5"

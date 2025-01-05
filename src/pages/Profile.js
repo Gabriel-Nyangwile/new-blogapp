@@ -10,16 +10,17 @@ import Button from "../components/Button";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../contexte/AuthContext";
 
-const ProfileUpdate = () => {
+const ProfileUpdate = ({ user }) => {
   const navigate = useNavigate();
   const [image, setImage] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
   const [uid, setUid] = useState("");
-  const [prevImage, setPrevImage] = useState("");
+  const [prevImage, setPrevImage] = useState(user?.image || null);
+  const [isUpdated, setIsUpdated] = useState(false);
   const { handleSubmit } = useForm();
-  const { setUserData, user } = useAuth();
+  const { setUserData } = useAuth();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -55,8 +56,12 @@ const ProfileUpdate = () => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
+      setIsUpdated(true);
     }
   };
+  /* const handleInputChange = (e) => {
+    setIsUpdated(true);
+  }; */
 
   const profileUpdate = async () => {
     try {
@@ -79,7 +84,7 @@ const ProfileUpdate = () => {
       await updateDoc(docRef, updateData);
       const snap = await getDoc(docRef);
       setUserData(snap.data());
-      navigate("/blogs");
+      navigate("/");
     } catch (error) {
       console.error("Erreur à la saisie du profil : ", error);
     }
@@ -92,7 +97,20 @@ const ProfileUpdate = () => {
         onSubmit={handleSubmit(profileUpdate)}
       >
         <h3 className="font-medium">Profile Details</h3>
-        {!user ? (
+        <div className="flex items-center gap-[10px]">
+            <img
+            className="max-w-[100px] aspect-square m-[20px_auto] rounded-full"
+            src={
+              image
+                ? URL.createObjectURL(image)
+                : prevImage
+                ? prevImage
+                : assets.logo_icon
+            }
+            alt="Profile"
+          />
+        </div>
+        {!prevImage && (
           <label className="flex items-center gap-[10px] text-gray-500 cursor-pointer">
             <input
               label="avatar"
@@ -101,43 +119,30 @@ const ProfileUpdate = () => {
               type="file"
               accept=".png, .jpg, .jpeg"
               hidden
-            />
+            />          
             <img
               src={image ? URL.createObjectURL(image) : assets.avatar_icon}
               className="w-[50px] aspect-square rounded-full"
-              alt=""
+              alt="Avatar Icon"
             />
             <p>upload profile image</p>
           </label>
-        ) : (
-          <img
-            className="max-w-[160px] aspect-square m-[20px_auto] rounded-full"
-            src={
-              image
-                ? URL.createObjectURL(image)
-                : prevImage
-                ? prevImage
-                : assets.logo_icon
-            }
-            alt=""
-          />
-        )}
-
+        )}      
         <Input
           label="Firstname"
           type="text"
-          onChange={(e) => setFirstName(e.target.value)}
           value={firstName}
-          placeholder="Your firstname"
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="Firstname"
           className="mb-4 p-2 border-gray-300 rounded"
           required
         />
         <Input
-          label="lastname"
+          label="Lastname"
           type="text"
-          onChange={(e) => setLastName(e.target.value)}
           value={lastName}
-          placeholder="Your lastname"
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Lastname"
           className="mb-4 p-2 border-gray-300 rounded"
           required
         />
@@ -152,7 +157,7 @@ const ProfileUpdate = () => {
           className="w-60 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-5 rounded"
           type="submit"
         >
-          Save
+          {isUpdated ? "Mettre à jour" : "Ok"}
         </Button>
       </form>
     </div>

@@ -11,7 +11,6 @@ import BlogEdit from "./blogs/BlogEdit";
 import { Route, Routes } from "react-router";
 import BlogDelete from "./blogs/BlogDelete";
 import BlogShow from "./blogs/BlogShow";
-import BlogDetails from "./blogs/BlogDetails";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 
@@ -24,7 +23,6 @@ function App() {
         <Route exact path="/" element={<Dashboard />} />
         <Route path="/register" element={<CreateUser />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/details" element={<BlogDetails />} />
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/blogs/:id" element={<ProtectedRoute element={<BlogShow />} />} />

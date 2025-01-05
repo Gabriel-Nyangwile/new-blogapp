@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom"; // Pour gérer les liens dynamiques avec React Router
 import image_fond from "../assets/image_fond.webp";
 import LogoutBtn from '../components/LogoutBtn';
+import { useAuth } from "../contexte/AuthContext";
+
 const Dashboard = () => {
+  const { user } = useAuth();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   // Fonction pour basculer la visibilité du sidebar
@@ -20,25 +23,25 @@ const Dashboard = () => {
       <div
         className={`relative z-10 ${
           isSidebarOpen ? "w-auto" : "w-0"
-        } bg-gray-400 text-white transition-all duration-300 overflow-hidden`}
+        } bg-gray-400 text-black text-2xl transition-all duration-300 overflow-hidden`}
       >
         <div className="p-4">
           <button
-            className="text-white font-bold hover:bg-gray-600 p-2 rounded shadow"
+            className="text-black font-bold hover:bg-gray-100 p-2 rounded shadow"
             onClick={toggleSidebar}
           >
             {isSidebarOpen ? "Fermer" : "☰"} {/* Icône Hamburger */}
           </button>
         </div>
         {isSidebarOpen && (
-          <nav className="p-4">
-            <ul>
+          <nav className="p-4 my-5">
+            <ul className="space-y-3">
               <li>
                 <NavLink
                   to="/blogs"
                   className={({ isActive }) =>
                     `block p-2 rounded ${
-                      isActive ? "bg-blue-500" : "hover:bg-gray-600"
+                      isActive ? "bg-blue-500" : "hover:bg-gray-100"
                     }`
                   }
                 >
@@ -50,7 +53,7 @@ const Dashboard = () => {
                   to="/create"
                   className={({ isActive }) =>
                     `block p-2 rounded ${
-                      isActive ? "bg-blue-500" : "hover:bg-gray-600"
+                      isActive ? "bg-blue-500" : "hover:bg-gray-100"
                     }`
                   }
                 >
@@ -62,27 +65,19 @@ const Dashboard = () => {
                   to="/profile"
                   className={({ isActive }) =>
                     `block p-2 rounded ${
-                      isActive ? "bg-blue-500" : "hover:bg-gray-600"
+                      isActive ? "bg-blue-500" : "hover:bg-gray-100"
                     }`
                   }
                 >
                   Voir son profil
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  to="/details"
-                  className={({ isActive }) =>
-                    `block p-2 rounded ${
-                      isActive ? "bg-blue-500" : "hover:bg-gray-600"
-                    }`
-                  }
-                >
-                  Montrez les détails du blog
-                </NavLink>
-              </li>
+  
             </ul>
-            <LogoutBtn  />
+            <div className="mt-10">
+              {user ? <LogoutBtn /> : null}
+              
+            </div>
           </nav>
         )}
       </div>
