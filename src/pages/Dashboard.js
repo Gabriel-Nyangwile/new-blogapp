@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom"; // Pour gérer les liens dynamiques avec React Router
 import image_fond from "../assets/image_fond.webp";
-import LogoutBtn from '../components/LogoutBtn';
+import LogoutBtn from "../components/LogoutBtn";
 import { useAuth } from "../contexte/AuthContext";
 
 const Dashboard = () => {
@@ -17,7 +17,11 @@ const Dashboard = () => {
     <div className="relative flex h-screen">
       {/* image de fonds */}
       <div className="absolute inset-0 w-full h-full">
-        <img src={image_fond} alt="Background" className="w-full h-full object-cover" />
+        <img
+          src={image_fond}
+          alt="Background"
+          className="w-full h-full object-cover"
+        />
       </div>
       {/* Volet gauche (sidebar) */}
       <div
@@ -25,14 +29,6 @@ const Dashboard = () => {
           isSidebarOpen ? "w-auto" : "w-0"
         } bg-gray-400 text-black text-2xl transition-all duration-300 overflow-hidden`}
       >
-        <div className="p-4">
-          <button
-            className="text-black font-bold hover:bg-gray-100 p-2 rounded shadow"
-            onClick={toggleSidebar}
-          >
-            {isSidebarOpen ? "Fermer" : "☰"} {/* Icône Hamburger */}
-          </button>
-        </div>
         {isSidebarOpen && (
           <nav className="p-4 my-5">
             <ul className="space-y-3">
@@ -45,7 +41,7 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Vue des tous les blogs publiés
+                  Blogs publiés
                 </NavLink>
               </li>
               <li>
@@ -69,15 +65,19 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Voir son profil
+                  Profil
                 </NavLink>
               </li>
-  
             </ul>
-            <div className="mt-10">
-              {user ? <LogoutBtn /> : null}
-              
+            <div className="p-4">
+              <button
+                className="text-black font-bold hover:bg-gray-100 p-2 rounded shadow"
+                onClick={toggleSidebar}
+              >
+                {isSidebarOpen ? "Fermer" : "☰"} {/* Icône Hamburger */}
+              </button>
             </div>
+            <div className="mt-10">{user ? <LogoutBtn /> : null}</div>
           </nav>
         )}
       </div>
@@ -97,10 +97,11 @@ const Dashboard = () => {
         </div>
         <div className="flex justify-center absolute top-1/4 transform -translate-y-1/2 w-full z-20">
           <div className="bg-black bg-opacity-50 p-6 rounded-lg">
-          <h1 className="text-4xl font-bold text-white mb-4">Bienvenue sur l'application BlogApp!</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Bienvenue sur l'application BlogApp!
+            </h1>
+          </div>
         </div>
-        </div>
-        
         <Outlet /> {/* Affiche le composant enfant en fonction du lien */}
       </div>
     </div>
