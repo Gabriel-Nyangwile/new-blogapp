@@ -5,7 +5,8 @@ function Logo({width = "100%"}) {
     <img 
         src={assets.Scofex_logo} 
         style={{width}} 
-        alt=""
+        alt="Logo"
+        className="object-cover h-full w-full items-center justify-center rounded-full overflow-hidden "
     />
   )
 }

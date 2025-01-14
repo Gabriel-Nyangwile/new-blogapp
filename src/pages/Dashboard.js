@@ -6,12 +6,17 @@ import { useAuth } from "../contexte/AuthContext";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   // Fonction pour basculer la visibilité du sidebar
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+
+  //fonction pour fermer le sidebar
+  const closeSidebar= () => {
+    setSidebarOpen(false);
+  }
 
   return (
     <div className="relative flex h-screen">
@@ -26,15 +31,17 @@ const Dashboard = () => {
       {/* Volet gauche (sidebar) */}
       <div
         className={`relative z-10 ${
-          isSidebarOpen ? "w-auto" : "w-0"
+          isSidebarOpen ? "w-64" : "w-0"
         } bg-gray-400 text-black text-2xl transition-all duration-300 overflow-hidden`}
+        onMouseEnter={toggleSidebar}
+        onMouseLeave={closeSidebar}
       >
         {isSidebarOpen && (
           <nav className="p-4 my-5">
             <ul className="space-y-3">
               <li>
                 <NavLink
-                  to="/blogs"
+                  to={user ? "/blogs" : "/login"}
                   className={({ isActive }) =>
                     `block p-2 rounded ${
                       isActive ? "bg-blue-500" : "hover:bg-gray-100"
@@ -74,7 +81,7 @@ const Dashboard = () => {
                 className="text-black font-bold hover:bg-gray-100 p-2 rounded shadow"
                 onClick={toggleSidebar}
               >
-                {isSidebarOpen ? "Fermer" : "☰"} {/* Icône Hamburger */}
+                {isSidebarOpen ? null : "☰"} {/* Icône Hamburger */}
               </button>
             </div>
             <div className="mt-10">{user ? <LogoutBtn /> : null}</div>
@@ -95,7 +102,7 @@ const Dashboard = () => {
             </button>
           )}
         </div>
-        <div className="flex justify-center absolute top-1/4 transform -translate-y-1/2 w-full z-20">
+        <div className="flex justify-center absolute top-1/4 transform -translate-y-1/2 w-full z-5">
           <div className="bg-black bg-opacity-50 p-6 rounded-lg">
             <h1 className="text-4xl font-bold text-white mb-4">
               Bienvenue sur l'application BlogApp!

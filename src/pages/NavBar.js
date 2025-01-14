@@ -8,7 +8,7 @@ const Navbar = () => {
 
   return (
     <section className="relative overflow-hidden py-20 bg-gray-400 border-none">
-      <div className=" py*5 h-auto shadow px-10 align-middle bg-gray-400 border-none">
+      <div className="fixed top-0 left-0 w-full py-5 h-auto shadow px-10 align-middle bg-gray-400 border-none z-10">
         <nav className="flex-row m-5">
           <ul className="flex items-center justify-evenly gap-20">
             <li className="flex flex-col items-center text-center hover:text-pink-700 hover:underline text-gray-700 bold bg-color-primary mb-3">

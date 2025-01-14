@@ -18,6 +18,12 @@ const BlogList = () => {
     setUpdatedBlogs(blogs);
   }, [blogs]);
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
   const handleComments = async (e, blogId) => {
     e.preventDefault();
     if (!commentText || !user) {
@@ -54,9 +60,10 @@ const BlogList = () => {
 
     if (!user) {
       alert("Vous n'êtes pas authentifié. Connectez-vous !");
-      navigate("/blogs");
+      navigate("/login");
       return;
     }
+    const userId = user.uid;//Récupérer l'ID de l'utilisateur connecté
     try {
       const blog = updatedBlogs.find((blog) => blog.id === blogId);
       const userLiked = blog.likes ? blog.likes.includes(user.uid) : false;
@@ -74,7 +81,7 @@ const BlogList = () => {
         return blog;
       });
       setUpdatedBlogs(updatedBlogsList);
-      await addLike(blogId, user.uid);
+      await addLike(blogId, userId);
     } catch (error) {
       console.error("Erreur d'ajout de like :", error);
     }
@@ -83,15 +90,41 @@ const BlogList = () => {
 
   const handleEdit = async (e, blogId) => {
     e.preventDefault();
+    if (!user) {
+      alert("Vous n'êtes pas authentifié. Connectez-vous !");
+      navigate("/login");
+      return;
+    }
     navigate(`/update-blog/${blogId}`);
+  };
+
+  const handleDelete = async (e, blogId) => {
+    e.preventDefault();
+    if (!user) {
+      alert("Vous n'êtes pas authentifié. Connectez-vous !");
+      navigate("/login");
+      return;
+    }
+    // Ajoutez ici la logique de suppression du blog
+    console.log('Blog supprimé');
   };
 
   const showDetails = async (e, blogId) => {
     e.preventDefault();
+    if (!user) {
+      alert("Vous n'êtes pas authentifié. Connectez-vous !");
+      navigate("/login");
+      return;
+    }
     navigate(`/blogs/${blogId}`);
   };
 
   const toggleCommentInput = (blogId) => {
+    if (!user) {
+      alert("Vous n'êtes pas authentifié. Connectez-vous !");
+      navigate("/login");
+      return;
+    }
     setShowCommentInput(showCommentInput === blogId ? null : blogId);
   };
 
@@ -197,19 +230,30 @@ const BlogList = () => {
                 <p>No comments yet</p>
               )}
             </div>
-            <div>
-              {user && user.uid === blog.authorId && (
-               <Button
-                type="button"
-                className="hover:bg-blue-300 text-white bg-primary m-3 gap-5"
-                onClick={(e) => handleEdit(e, blog.id)}
-              >
-                Modifier
-              </Button> 
+            <div className="flex w-full items-center text-3xl m-5 gap-4" >
+              {user.uid === blog.authorUid ? (
+                <div className="flex w-full items-center text-3xl m-2 gap-4">
+                  <Button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-300 text-white bg-primary m-3 gap-5"
+                    onClick={(e) => handleEdit(e, blog.id)}
+                  >
+                    Modifier
+                  </Button>
+                  <Button
+                    type="button"
+                    className="bg-red-500 hover:bg-red-700 text-white bg-primary m-3 gap-5 rounded ml-4"
+                    onClick={(e) => handleDelete(e, blog.id)}
+                  >
+                    Supprimer
+                  </Button>
+                </div>
+              ):(
+                null
               )}
               <Button
                 type="button"
-                className="bg-blue-500 hover:bg-blue-300 text-white bg-primary m-3 gap-5"
+                className="bg-blue-500 hover:bg-blue-300 text-white bg-primary text-xl mr-20 w-2/4"
                 onClick={(e) => showDetails(e, blog.id)}
               >
                 Voir le blog

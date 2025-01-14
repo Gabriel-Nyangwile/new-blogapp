@@ -47,6 +47,7 @@ export const BlogProvider = ({ children }) => {
         content,
         createdAt: Timestamp.fromDate(new Date()),
         authorName: user.displayName || user.email, // Utilisez le nom de l'utilisateur authentifié ou l'email si le nom n'est pas disponible
+        authorUid: user.uid, // Utilisez l'UID de l'utilisateur authentifié
         likes: 0, // initialisation des likes
         comments: [], // initialisation des commentaires à un tableau vide
       });
@@ -72,6 +73,7 @@ export const BlogProvider = ({ children }) => {
           image: imageUrl,
           createdAt: Timestamp.fromDate(new Date()),
           authorName: user.displayName || user.email,
+          authorUid: user.uid,
           likes: 0,
           comments: [],
         },
