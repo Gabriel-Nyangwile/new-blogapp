@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 import Button from "../components/Button";
 import { useAuth } from "../contexte/AuthContext";
-import UseViewCounter from "../contexte/UseViewCounter";
+import useViewCounter from "../contexte/useViewCounter";
 
 
 const BlogList = () => {
@@ -17,6 +17,7 @@ const BlogList = () => {
   const [commentText, setCommentText] = useState("");
   const [showCommentInput, setShowCommentInput] = useState(null);
   const [updatedBlogs, setUpdatedBlogs] = useState(blogs);
+  const [currentBlogId, setCurrentBlogId] = useState(null);
 
   useEffect(() => {
     setUpdatedBlogs(blogs);
@@ -28,10 +29,12 @@ const BlogList = () => {
     }
   }, [user, navigate]);
 
+  useViewCounter(currentBlogId);
+
   const handleComments = async (e, blogId) => {
     e.preventDefault();
     if (!commentText || !user) {
-      console.error("Les commentaires manque ou vous n'êtes pas connecté!");
+      console.error("Les commentaires manquent ou vous n'êtes pas connecté!");
       return;
     }
     const comment = {
@@ -129,7 +132,7 @@ const BlogList = () => {
 
   const showDetails = async (e, blogId) => {
     e.preventDefault();
-    await UseViewCounter(blogId)
+    setCurrentBlogId(blogId)
     if (!user) {
       alert("Vous n'êtes pas authentifié. Connectez-vous !");
       navigate("/login");
