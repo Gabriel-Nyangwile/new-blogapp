@@ -49,7 +49,7 @@ const BlogShow = ({blogId}) => {
           <li className="text-left place-items-left text-2xl mb-4 ml-5">
             Contenu:{" "}
           </li>
-          <li className="text-left place-items-left text-2xl mb-4 ml-5">
+          <li className="text-left place-items-left text-2xl px-20 mb-4 ml-5">
             {typeof blog.content === "string"
               ? parse(blog.content)
               : "Invalid content"}{" "}

@@ -18,6 +18,7 @@ const BlogList = () => {
   const [showCommentInput, setShowCommentInput] = useState(null);
   const [updatedBlogs, setUpdatedBlogs] = useState(blogs);
   const [currentBlogId, setCurrentBlogId] = useState(null);
+  
 
   useEffect(() => {
     setUpdatedBlogs(blogs);
@@ -29,6 +30,7 @@ const BlogList = () => {
     }
   }, [user, navigate]);
 
+  // Appel du hook personnalisé pour incrémenter les vues
   useViewCounter(currentBlogId);
 
   const handleComments = async (e, blogId) => {
@@ -115,24 +117,9 @@ const BlogList = () => {
     console.log("Blog supprimé");
   };
 
-  /* const incrementViews = async (blogId) => {
-    try {
-      const blogRef = doc(db, "blogs", blogId);
-      const blogData = blogs.data();
-      const newViews = (blogData.views || 0) + 1;
-
-      await updateDoc(blogRef, {
-        views: newViews
-      });
-      setUpdatedBlogs(updatedBlogs.map((blog) => blog.id === blogId ? { ...blog, views: newViews } : blog));
-    } catch (error) {
-      console.error("Echec d'incrémentation des vues:", error);
-    }
-  }; */
-
-  const showDetails = async (e, blogId) => {
+  const showDetails = (e, blogId) => {
     e.preventDefault();
-    setCurrentBlogId(blogId)
+    setCurrentBlogId(blogId);
     if (!user) {
       alert("Vous n'êtes pas authentifié. Connectez-vous !");
       navigate("/login");
@@ -213,7 +200,7 @@ const BlogList = () => {
                     </span>
                   )}
                 </p>
-                <p className="text-gray-500">Vues : {blog.views}</p>
+                <p className="text-gray-500">Vues : {blog.views || 0}</p>
                 
               </div>
             </div>

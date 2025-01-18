@@ -22,7 +22,7 @@ const Navbar = () => {
                 <Link to="/register">
                   <FaUserPlus className="ml-12" />
                   <span className="font-sm flex font-light text-lg">
-                    Créer un compte
+                    Créer un compte <br />ou connectez-vous
                   </span>
                 </Link>
               </li>

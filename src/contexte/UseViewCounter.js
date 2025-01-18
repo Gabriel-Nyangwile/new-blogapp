@@ -1,19 +1,18 @@
-import { useEffect } from "react";
-import { doc, updateDoc, increment } from "firebase/firestore";
-import { db } from '../config/firebase' // Importez votre configuration Firebase
+import { useEffect } from 'react';
+import { doc, updateDoc, increment } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 const useViewCounter = (blogId) => {
   useEffect(() => {
-    if (!blogId) return;
-
     const incrementViews = async () => {
+      if (!blogId) return;
+      const blogRef = doc(db, 'blogs', blogId);
       try {
-        const blogRef = doc(db, "blogs", blogId);
         await updateDoc(blogRef, {
-          views: increment(1), // Incrémente le compteur de vues
+          views: increment(1),
         });
       } catch (error) {
-        console.error("Erreur lors de l'incrémentation des vues :", error);
+        console.error('Erreur d\'incrémentation des vues:', error);
       }
     };
 
