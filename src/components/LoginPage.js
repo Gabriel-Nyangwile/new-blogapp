@@ -24,7 +24,7 @@ export default function LoginPage() {
       }
       await signIn(email, password);
       console.log("User logged in successfully");
-      navigate("/profile");
+      navigate("/");
       setEmail("");
       setPassword("");
 

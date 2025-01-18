@@ -27,12 +27,14 @@ const Dashboard = () => {
           alt="Background"
           className="w-full h-full object-cover"
         />
+        {/* Superposition bleu très transparent */}
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       </div>
       {/* Volet gauche (sidebar) */}
       <div
         className={`relative z-10 ${
           isSidebarOpen ? "w-64" : "w-0"
-        } bg-gray-400 text-black text-2xl transition-all duration-300 overflow-hidden`}
+        } items-center justify-center bg-gray-400 text-black text-lg transition-all duration-300 overflow-hidden`}
         onMouseEnter={toggleSidebar}
         onMouseLeave={closeSidebar}
       >
@@ -48,7 +50,7 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Blogs publiés
+                  Liste des blogs
                 </NavLink>
               </li>
               <li>
@@ -60,7 +62,7 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Créer son propre blog
+                  Créer un blog
                 </NavLink>
               </li>
               <li>
@@ -72,7 +74,7 @@ const Dashboard = () => {
                     }`
                   }
                 >
-                  Profil
+                  Consulter le profil
                 </NavLink>
               </li>
             </ul>
@@ -93,14 +95,12 @@ const Dashboard = () => {
       <div className="flex-1 p-4 flex flex-col items-center bg-gray-100">
         <div className="fixed top-4 left-4 z-20">
           {/* Bouton pour afficher/cacher la sidebar si fermée */}
-          {!isSidebarOpen && (
             <button
               className="text-gray-800 font-bold bg-gray-200 p-2 rounded shadow"
               onClick={toggleSidebar}
             >
-              ☰
+              {isSidebarOpen ? null : "☰"} {/* Icône Hamburger */}
             </button>
-          )}
         </div>
         <div className="flex justify-center absolute top-1/4 transform -translate-y-1/2 w-full z-5">
           <div className="bg-black bg-opacity-50 p-6 rounded-lg">

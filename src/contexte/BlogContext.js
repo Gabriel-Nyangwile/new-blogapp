@@ -50,6 +50,7 @@ export const BlogProvider = ({ children }) => {
         authorUid: user.uid, // Utilisez l'UID de l'utilisateur authentifié
         likes: 0, // initialisation des likes
         comments: [], // initialisation des commentaires à un tableau vide
+        views: 0, // initialisation des vues
       });
 
       let imageUrl = null;
@@ -76,6 +77,7 @@ export const BlogProvider = ({ children }) => {
           authorUid: user.uid,
           likes: 0,
           comments: [],
+          views: 0,
         },
       ]);
     } catch (error) {

@@ -36,19 +36,12 @@ const Navbar = () => {
                       {user.displayName || user.email}{" "}
                       <span className="font-sm flex font-light">Connecté</span>
                     </div>
-
-                    {/* <div className="text-2xl text-gray-700">
-                      <span
-                        className="text-sm font-light flex
-               items-center justify-center"
-                      >
-                        Non Connecté
-                      </span>
-                    </div> */}
                   </Link>
                 </li>
                 <li>
-                  <LogoutBtn className="flex text-lg items-center hover:text-pink-700 hover:underline text-gray-700 bold bg-color-primary mb-3" />
+                    {user ?
+                    <LogoutBtn className="flex text-lg items-center hover:text-pink-700 hover:underline text-gray-700 bold bg-color-primary mb-3" />
+                     : null}
                 </li>
               </>
             ) : null}

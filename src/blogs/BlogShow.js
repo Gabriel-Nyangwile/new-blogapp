@@ -5,7 +5,7 @@ import parse from "html-react-parser";
 import Button from "../components/Button";
 import { Timestamp } from "firebase/firestore";
 
-const BlogShow = () => {
+const BlogShow = ({blogId}) => {
   const { id } = useParams();
   const { blogs } = useBlog();
   const [blog, setBlog] = useState(null);
@@ -24,8 +24,8 @@ const BlogShow = () => {
 
   return (
     <>
-      <div className="w-full relative overflow-hidden  bg-gray-400 border-none">
-        <h1 className="text-left place-content-left text-4xl mt-0 ml-5 mb-10 underline">
+      <div className="w-full relative overflow-hidden  bg-gray-100 border-none">
+        <h1 className="text-left place-content-left text-4xl mt-0 ml-5 mb-10">
           Titre: {blog.title}
         </h1>
         <ul>
@@ -59,6 +59,7 @@ const BlogShow = () => {
       <div className="flex flex-row items-stretch mt-4 gap-40">
         <h2 className="text-lg font-bold">Commentaires:  💬  </h2>
         <h2 className="text-lg font-bold">likes : ❤ ({blog.likes ? blog.likes.length : 0})</h2>
+        <p className="text-lg font-bold">Vues : {blog.views}</p>
       </div>
       <section className="w-auto items-center border-none p-4">
         {Array.isArray(blog.comments) ? (

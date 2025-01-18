@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import parse from "html-react-parser";
 import { useBlog } from "../contexte/BlogContext";
 import { useNavigate } from "react-router";
-import { Timestamp } from "firebase/firestore";
+import {
+  Timestamp,
+} from "firebase/firestore";
 import Button from "../components/Button";
 import { useAuth } from "../contexte/AuthContext";
+import UseViewCounter from "../contexte/UseViewCounter";
+
 
 const BlogList = () => {
   const { addComment, addLike, blogs } = useBlog();
@@ -63,7 +67,7 @@ const BlogList = () => {
       navigate("/login");
       return;
     }
-    const userId = user.uid;//Récupérer l'ID de l'utilisateur connecté
+    const userId = user.uid; //Récupérer l'ID de l'utilisateur connecté
     try {
       const blog = updatedBlogs.find((blog) => blog.id === blogId);
       const userLiked = blog.likes ? blog.likes.includes(user.uid) : false;
@@ -87,7 +91,6 @@ const BlogList = () => {
     }
   };
 
-
   const handleEdit = async (e, blogId) => {
     e.preventDefault();
     if (!user) {
@@ -106,11 +109,27 @@ const BlogList = () => {
       return;
     }
     // Ajoutez ici la logique de suppression du blog
-    console.log('Blog supprimé');
+    console.log("Blog supprimé");
   };
+
+  /* const incrementViews = async (blogId) => {
+    try {
+      const blogRef = doc(db, "blogs", blogId);
+      const blogData = blogs.data();
+      const newViews = (blogData.views || 0) + 1;
+
+      await updateDoc(blogRef, {
+        views: newViews
+      });
+      setUpdatedBlogs(updatedBlogs.map((blog) => blog.id === blogId ? { ...blog, views: newViews } : blog));
+    } catch (error) {
+      console.error("Echec d'incrémentation des vues:", error);
+    }
+  }; */
 
   const showDetails = async (e, blogId) => {
     e.preventDefault();
+    await UseViewCounter(blogId)
     if (!user) {
       alert("Vous n'êtes pas authentifié. Connectez-vous !");
       navigate("/login");
@@ -132,7 +151,7 @@ const BlogList = () => {
     <div className="w-full relative flex flex-col items-stretch justify-start overflow-hidden  bg-gray-200 border-none p-10">
       <div className="bg-gray-700 bg-opacity-50 p-6 rounded-lg">
         <h1 className="text-4xl font-semibold text-white text-center items-center mb-10">
-          Blogs publiés
+          Liste des blogs publiés
         </h1>
       </div>
       <ul>
@@ -145,11 +164,24 @@ const BlogList = () => {
             <div>
               {/* Pour vérifier que le contenu est une chaîne */}
               <p className="text-2xl bold mb-5">
-                Auteur : {blog.authorName || blog.authorEmail} -  Créé le:{" "}
+                Auteur : {blog.authorName || blog.authorEmail} - Créé le:{" "}
                 {blog.createdAt instanceof Timestamp
                   ? blog.createdAt.toDate().toLocaleDateString()
                   : "Invalid date"}
               </p>
+              {/* <p>
+                {blog.content.length > 100
+                ? `${blog.content.substring(0, 100)}...`
+                : blog.content}
+                {blog.content.length > 100 && (
+                  <span 
+                    className="text-blue-500 cursor-pointer"
+                    onClick={() => showDetails(null, blog.id)}
+                    >
+                    Pour lire la suite, cliquez ici ...
+                  </span>
+                )}
+              </p> */}
             </div>
             <div className="flex justify-left items-left mt-10 mb-10">
               <div className="flex items-center justify-center h-24 w-24 rounded-full overflow-hidden border border-gray-300">
@@ -162,12 +194,24 @@ const BlogList = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col items-start justify-start mt-10 mb-10 px-6">
+            <div className="flex flex-col items-start justify-start mt-5 mb-5 px-6">
               <div className="w-full max-w-3xl mx-auto">
-                <span className="text-2xl underline my-6">Contenu :</span>{" "}
-                {typeof blog.content === "string"
-                  ? parse(blog.content)
-                  : "Invalid content"}
+                <p className="text-2xl my-6">
+                  {typeof blog.content === "string" && blog.content.length > 100
+                    ? parse(`${blog.content.substring(0, 100)}...`)
+                    : parse(blog.content)}
+                  {/* "Invalid content" */}
+                  {blog.content.length > 100 && (
+                    <span
+                      className="text-blue-500 text-lg cursor-pointer"
+                      onClick={(e) => showDetails(e, blog.id)}
+                    >
+                      Lire la suite ...
+                    </span>
+                  )}
+                </p>
+                <p className="text-gray-500">Vues : {blog.views}</p>
+                
               </div>
             </div>
             <div className="flex w-full items-center text-3xl m-5 gap-4">
@@ -213,24 +257,24 @@ const BlogList = () => {
             <div className="flex flex-col items-left justify-left mt-10 mb-10 px-6">
               {Array.isArray(blog.comments) ? (
                 blog.comments
-                .sort((a,b) => b.createdAt - a.createdAt)
-                .map((comment, index) => (
-                  <div
-                    key={index}
-                    className="border-solid border-2 border-gray-300 p-2 mb-4"
-                  >
-                    <br />
-                    {comment.text} - Par {comment.author} - le{" "}
-                    {comment.createdAt instanceof Timestamp
-                      ? comment.createdAt.toDate().toLocaleDateString()
-                      : "Invalid date"}
-                  </div>
-                ))
+                  .sort((a, b) => b.createdAt - a.createdAt)
+                  .map((comment, index) => (
+                    <div
+                      key={index}
+                      className="border-solid border-2 border-gray-300 p-2 mb-4"
+                    >
+                      <br />
+                      {comment.text} - Par {comment.author} - le{" "}
+                      {comment.createdAt instanceof Timestamp
+                        ? comment.createdAt.toDate().toLocaleDateString()
+                        : "Invalid date"}
+                    </div>
+                  ))
               ) : (
                 <p>No comments yet</p>
               )}
             </div>
-            <div className="flex w-full items-center text-3xl m-5 gap-4" >
+            <div className="flex w-full items-center text-3xl m-5 gap-4">
               {user.uid === blog.authorUid ? (
                 <div className="flex w-full items-center text-3xl m-2 gap-4">
                   <Button
@@ -248,9 +292,7 @@ const BlogList = () => {
                     Supprimer
                   </Button>
                 </div>
-              ):(
-                null
-              )}
+              ) : null}
               <Button
                 type="button"
                 className="bg-blue-500 hover:bg-blue-300 text-white bg-primary text-xl mr-20 w-2/4"
