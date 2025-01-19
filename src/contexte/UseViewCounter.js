@@ -12,7 +12,7 @@ const useViewCounter = (blogId) => {
           views: increment(1),
         });
       } catch (error) {
-        console.error('Erreur d\'incrémentation des vues:', error);
+        console.error("Erreur d'incrémentation des vues:", error);
       }
     };
 
